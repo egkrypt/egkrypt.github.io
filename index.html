@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGKrypt | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 selection:bg-blue-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="#" class="text-xl font-bold text-blue-600">KryptDev</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="hover:text-blue-600 transition">About</a>
+                    <a href="#innovations" class="hover:text-blue-600 transition">Innovations</a>
+                    <a href="#degrees" class="hover:text-blue-600 transition">Degrees</a>
+                    <a href="#projects" class="hover:text-blue-600 transition">Projects</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="pt-32 pb-20 px-4 max-w-6xl mx-auto text-center">
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+            Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">EGKrypt</span>
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-10">
+            A passionate developer and innovator creating digital solutions, exploring new technologies, and building the future.
+        </p>
+        <a href="#projects" class="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition shadow-lg hover:shadow-xl">
+            View My Work
+        </a>
+    </section>
+
+    <!-- Innovations Section -->
+    <section id="innovations" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center">Innovations & Ideas</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Innovation Card 1 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 text-2xl">💡</div>
+                    <h3 class="text-xl font-semibold mb-2">Next-Gen Algorithm</h3>
+                    <p class="text-slate-600">Brief description of your innovative approach, research, or patented idea.</p>
+                </div>
+                <!-- Innovation Card 2 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4 text-2xl">🚀</div>
+                    <h3 class="text-xl font-semibold mb-2">Automated Workflow</h3>
+                    <p class="text-slate-600">A new way of handling distributed systems and cloud deployments seamlessly.</p>
+                </div>
+                <!-- Innovation Card 3 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mb-4 text-2xl">🔒</div>
+                    <h3 class="text-xl font-semibold mb-2">Secure Protocol</h3>
+                    <p class="text-slate-600">Innovative cryptographic protocol design for secure P2P messaging.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Degrees & Education -->
+    <section id="degrees" class="py-20 bg-slate-50">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center">Education & Degrees</h2>
+            <div class="space-y-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Master of Science in Computer Science</h3>
+                        <p class="text-blue-600 font-medium">University Name</p>
+                    </div>
+                    <span class="mt-4 md:mt-0 px-4 py-1 bg-slate-100 text-slate-600 rounded-full text-sm font-semibold">2022 - 2024</span>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Bachelor of Science in Software Engineering</h3>
+                        <p class="text-blue-600 font-medium">University Name</p>
+                    </div>
+                    <span class="mt-4 md:mt-0 px-4 py-1 bg-slate-100 text-slate-600 rounded-full text-sm font-semibold">2018 - 2022</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center">Featured Projects</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Project 1 -->
+                <div class="group border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-500 transition">
+                    <div class="h-48 bg-slate-200 w-full object-cover flex items-center justify-center text-slate-400">
+                        [Project Image/Screenshot Here]
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Krypt App</h3>
+                        <p class="text-slate-600 mb-4">A full-stack application built with React and Node.js that helps developers manage their snippets.</p>
+                        <a href="#" class="text-blue-600 font-medium hover:underline">View Project &rarr;</a>
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="group border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-500 transition">
+                    <div class="h-48 bg-slate-200 w-full object-cover flex items-center justify-center text-slate-400">
+                        [Project Image/Screenshot Here]
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Crypto API</h3>
+                        <p class="text-slate-600 mb-4">A high-performance REST API written in Go for tracking real-time cryptocurrency data.</p>
+                        <a href="#" class="text-blue-600 font-medium hover:underline">View Project &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center">
+        <p>&copy; 2026 EGKrypt. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
