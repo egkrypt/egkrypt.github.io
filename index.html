@@ -8,74 +8,75 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@700&display=swap');
         
         body { 
             font-family: 'Outfit', sans-serif; 
-            background-color: #030008;
+            background-color: #020005;
             color: #e2e8f0;
             overflow-x: hidden;
         }
 
-        #particles-js {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.15) 0%, rgba(3, 0, 8, 1) 100%);
-        }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
-        .glass-card {
-            background: rgba(20, 10, 30, 0.5);
-            backdrop-filter: blur(12px); border: 1px solid rgba(168, 85, 247, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        /* Premium Glassmorphism */
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #c084fc, #db2777);
+            background: linear-gradient(135deg, #c084fc, #ec4899, #8b5cf6);
+            background-size: 200% 200%;
+            animation: gradientShift 5s ease infinite;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        @keyframes gradientShift { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
 
-        .card-3d-container { perspective: 1000px; }
-        .card-3d { transform-style: preserve-3d; transition: transform 0.3s ease; }
-        .card-3d-content { transform: translateZ(50px); }
-        
-        .game-hover-overlay { background: rgba(255, 255, 255, 0.0); transition: all 0.3s ease; }
-        .group:hover .game-hover-overlay { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(2px); }
+        .font-space { font-family: 'Space Grotesk', sans-serif; }
 
-        .scene { width: 100px; height: 100px; perspective: 600px; margin: 0 auto; }
-        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: translateZ(-50px); animation: spinCube 8s infinite linear; }
-        .cube__face { position: absolute; width: 100px; height: 100px; border: 2px solid #a855f7; background: rgba(20, 10, 30, 0.8); display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
-        .cube__face--front  { transform: rotateY(  0deg) translateZ(50px); }
-        .cube__face--right  { transform: rotateY( 90deg) translateZ(50px); }
-        .cube__face--back   { transform: rotateY(180deg) translateZ(50px); }
-        .cube__face--left   { transform: rotateY(-90deg) translateZ(50px); }
-        .cube__face--top    { transform: rotateX( 90deg) translateZ(50px); }
-        .cube__face--bottom { transform: rotateX(-90deg) translateZ(50px); }
-        @keyframes spinCube { 0% { transform: translateZ(-50px) rotateX(0deg) rotateY(0deg); } 100% { transform: translateZ(-50px) rotateX(360deg) rotateY(360deg); } }
+        /* 3D Game Cards */
+        .game-card { perspective: 1000px; }
+        .game-inner { transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .game-content { transform: translateZ(60px); }
+        .game-overlay { background: rgba(0,0,0,0.8); transition: all 0.3s ease; }
+        .group:hover .game-overlay { background: rgba(255,255,255,0.1); backdrop-filter: blur(3px); }
+
+        /* Glowing OS Button */
+        .os-btn-container { position: relative; display: inline-block; }
+        .os-btn-glow {
+            position: absolute; inset: -5px; background: linear-gradient(90deg, #c084fc, #ec4899, #3b82f6);
+            border-radius: 50px; filter: blur(15px); opacity: 0.7; animation: pulseGlow 2s linear infinite;
+        }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.5; filter: blur(15px); } 50% { opacity: 1; filter: blur(25px); } }
 
         /* Transition Overlay */
         #transition-overlay {
             position: fixed; inset: 0; background: #000; z-index: 99999;
-            display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.5s ease;
+            display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
         }
         .active-transition { opacity: 1 !important; display: flex !important; }
-        .warp-speed { animation: warpOut 1.5s forwards cubic-bezier(0.5, 0, 0.1, 1); }
-        @keyframes warpOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(50); opacity: 0; } }
+        .warp-speed { animation: warpOut 1s forwards cubic-bezier(0.5, 0, 0.1, 1); }
+        @keyframes warpOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(100); opacity: 0; } }
     </style>
 </head>
 <body class="selection:bg-purple-500 selection:text-white antialiased">
 
-    <!-- Transition Screen -->
+    <!-- Screen Wipe Transition -->
     <div id="transition-overlay">
-        <div id="warp-core" class="w-10 h-10 bg-purple-500 rounded-full shadow-[0_0_100px_#a855f7]"></div>
+        <div id="warp-core" class="w-10 h-10 bg-white rounded-full shadow-[0_0_100px_#fff]"></div>
     </div>
 
     <div id="particles-js"></div>
 
-    <nav class="fixed w-full glass-card z-50 border-b border-purple-500/20">
+    <nav class="fixed w-full glass-panel z-50 border-b border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="#" class="text-2xl font-bold tracking-tighter gradient-text">EG-Krypt</a>
-                <div class="hidden md:flex space-x-6 text-sm font-semibold text-gray-300">
+            <div class="flex justify-between h-20 items-center">
+                <a href="#" class="text-2xl font-space font-bold tracking-tighter text-white">EG-KRYPT<span class="text-purple-500">.</span></a>
+                <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-300">
                     <a href="#os-entry" class="hover:text-purple-400 transition">KryptOS</a>
                     <a href="#games" class="hover:text-purple-400 transition">Games</a>
                     <a href="#contact" class="hover:text-purple-400 transition">Contact</a>
@@ -85,97 +86,94 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="pt-40 pb-10 px-4 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
-        <div class="mb-6" data-tilt data-tilt-max="20" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.5">
-            <div class="w-40 h-40 rounded-3xl bg-gradient-to-br from-purple-500 to-pink-600 p-1 shadow-[0_0_50px_rgba(168,85,247,0.6)]">
-                <img src="https://github.com/egkrypt.png" alt="Ali Saleh" class="w-full h-full object-cover rounded-[22px] border-2 border-black">
+    <section class="pt-40 pb-20 px-4 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
+        <div class="mb-8" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.3">
+            <div class="w-48 h-48 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 p-1 shadow-[0_0_50px_rgba(168,85,247,0.4)]">
+                <img src="https://github.com/egkrypt.png" alt="Ali Saleh" class="w-full h-full object-cover rounded-full border-4 border-[#020005]">
             </div>
         </div>
         
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
+        <h1 class="text-6xl md:text-8xl font-space font-extrabold tracking-tight mb-6 text-white drop-shadow-2xl">
             Hi, I'm <span class="gradient-text">Ali Saleh</span>
         </h1>
-        <h2 class="text-xl md:text-2xl text-gray-300 font-light mb-8 max-w-4xl leading-relaxed">
+        <h2 class="text-xl md:text-3xl text-gray-400 font-light mb-10 max-w-4xl leading-relaxed">
             18-year-old Lebanese/Kuwaiti <strong class="text-white font-semibold">Computer Engineer, Software & Game Dev</strong>.
         </h2>
         
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-            <a href="https://discord.gg/ExMbGbcszn" target="_blank" class="px-6 py-2 bg-indigo-600/20 border border-indigo-500 hover:bg-indigo-600 hover:text-white transition rounded-full text-sm text-indigo-300 flex items-center gap-2">
-                🎮 Join Eagles Discord
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <a href="https://discord.gg/ExMbGbcszn" target="_blank" class="px-8 py-3 glass-panel hover:bg-indigo-600/30 transition rounded-full text-sm text-indigo-300 font-bold tracking-wider flex items-center gap-2 border border-indigo-500/50">
+                🎮 EAGLES DISCORD
             </a>
-            <a href="https://www.instagram.com/egls.27/" target="_blank" class="px-6 py-2 bg-pink-600/20 border border-pink-500 hover:bg-pink-600 hover:text-white transition rounded-full text-sm text-pink-300 flex items-center gap-2">
-                📸 Instagram
+            <a href="https://www.instagram.com/egls.27/" target="_blank" class="px-8 py-3 glass-panel hover:bg-pink-600/30 transition rounded-full text-sm text-pink-300 font-bold tracking-wider flex items-center gap-2 border border-pink-500/50">
+                📸 INSTAGRAM
             </a>
-            <a href="https://www.youtube.com/@EG-Krypt" target="_blank" class="px-6 py-2 bg-red-600/20 border border-red-500 hover:bg-red-600 hover:text-white transition rounded-full text-sm text-red-300 flex items-center gap-2">
-                ▶️ YouTube
+            <a href="https://www.youtube.com/@EG-Krypt" target="_blank" class="px-8 py-3 glass-panel hover:bg-red-600/30 transition rounded-full text-sm text-red-300 font-bold tracking-wider flex items-center gap-2 border border-red-500/50">
+                ▶️ YOUTUBE
             </a>
         </div>
     </section>
 
-    <!-- OS Entry Portal -->
-    <section id="os-entry" class="py-10 relative z-10">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="glass-card rounded-3xl p-8 md:p-12 border-2 border-purple-500/40 shadow-[0_0_50px_rgba(168,85,247,0.2)] text-center relative overflow-hidden">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Top 1 Kuwait Science Club 🥇</h2>
-                <p class="text-gray-400 mb-10 max-w-2xl mx-auto">Access my interactive KryptOS to view my Degrees, Interactive Skills, Art, and Gallery!</p>
+    <!-- The OS Portal -->
+    <section id="os-entry" class="py-20 relative z-10">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="glass-panel rounded-[3rem] p-10 md:p-16 border border-purple-500/30 text-center relative overflow-hidden bg-black/40">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
                 
-                <a href="#" onclick="bootOS(event)" class="inline-block group cursor-pointer">
-                    <div class="scene mb-6">
-                        <div class="cube group-hover:shadow-[0_0_50px_rgba(255,255,255,0.8)] transition duration-500">
-                            <div class="cube__face cube__face--front">💻</div>
-                            <div class="cube__face cube__face--back">📁</div>
-                            <div class="cube__face cube__face--right">🔐</div>
-                            <div class="cube__face cube__face--left">🌐</div>
-                            <div class="cube__face cube__face--top">⚡</div>
-                            <div class="cube__face cube__face--bottom">⚙️</div>
-                        </div>
-                    </div>
-                    <span class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition block shadow-[0_0_30px_rgba(219,39,119,0.5)]">
-                        BOOT KRYPT_OS
-                    </span>
-                </a>
+                <h2 class="text-4xl md:text-6xl font-space font-bold mb-6 text-white">ACCESS <span class="text-purple-500">MAINFRAME</span></h2>
+                <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">Enter my interactive KryptOS to view all my <strong class="text-yellow-400">#1 Science Awards</strong>, detailed Skills, Degrees, and Fun Apps.</p>
+                
+                <!-- The Launch OS Button -->
+                <div class="os-btn-container cursor-pointer" onclick="bootOS(event)">
+                    <div class="os-btn-glow"></div>
+                    <button class="relative px-12 py-5 bg-[#020005] border border-purple-500 rounded-full font-space font-bold text-2xl text-white uppercase tracking-[0.2em] hover:scale-105 transition-transform duration-300 flex items-center gap-4 z-10">
+                        <span class="text-purple-500">⚡</span> LAUNCH KRYPT_OS
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Games -->
-    <section id="games" class="py-20 relative z-10 bg-black/60 border-y border-purple-500/20">
+    <!-- Published Games -->
+    <section id="games" class="py-24 relative z-10 bg-black/80 border-y border-white/5">
         <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl md:text-6xl font-bold mb-4 text-center">Published <span class="gradient-text">Games</span></h2>
-            <p class="text-center text-gray-400 mb-16">Also developing <strong class="text-pink-500">HUSH.</strong> for Steam!</p>
+            <h2 class="text-5xl md:text-7xl font-space font-bold mb-4 text-center text-white">PUBLISHED <span class="gradient-text">GAMES</span></h2>
+            <p class="text-center text-xl text-gray-400 mb-16">Developing <strong class="text-pink-500">HUSH.</strong> for Steam!</p>
             
-            <div class="grid md:grid-cols-3 gap-10 card-3d-container">
-                <a href="https://alawyds.itch.io/the-asylum" target="_blank" class="block group" data-tilt data-tilt-max="15" data-tilt-speed="400">
-                    <div class="card-3d glass-card rounded-2xl h-80 relative overflow-hidden border border-purple-500/30">
-                        <img src="./assets/asylum.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=The+Asylum'">
-                        <div class="absolute inset-0 game-hover-overlay flex flex-col justify-end p-6">
-                            <div class="card-3d-content">
-                                <h3 class="text-3xl font-extrabold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">The Asylum</h3>
-                                <p class="text-sm text-red-300 font-bold uppercase tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">Puzzle Horror</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Asylum -->
+                <a href="https://alawyds.itch.io/the-asylum" target="_blank" class="game-card block group" data-tilt data-tilt-max="10" data-tilt-speed="400">
+                    <div class="game-inner relative rounded-2xl h-[400px] overflow-hidden border border-white/10 shadow-2xl">
+                        <img src="./assets/asylum.jpg" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition duration-700" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=The+Asylum'">
+                        <div class="absolute inset-0 game-overlay flex flex-col justify-end p-8">
+                            <div class="game-content">
+                                <p class="text-red-400 font-bold tracking-widest text-sm mb-2 uppercase">Puzzle Horror</p>
+                                <h3 class="text-4xl font-space font-bold text-white drop-shadow-lg">The Asylum</h3>
                             </div>
                         </div>
                     </div>
                 </a>
                 
-                <a href="https://alawyds.itch.io/chasers" target="_blank" class="block group" data-tilt data-tilt-max="15" data-tilt-speed="400">
-                    <div class="card-3d glass-card rounded-2xl h-80 relative overflow-hidden border border-purple-500/30">
-                        <img src="./assets/chasers.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=Chasers'">
-                        <div class="absolute inset-0 game-hover-overlay flex flex-col justify-end p-6">
-                            <div class="card-3d-content">
-                                <h3 class="text-3xl font-extrabold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">Chasers</h3>
-                                <p class="text-sm text-pink-300 font-bold uppercase tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">Meme Horror</p>
+                <!-- Chasers -->
+                <a href="https://alawyds.itch.io/chasers" target="_blank" class="game-card block group" data-tilt data-tilt-max="10" data-tilt-speed="400">
+                    <div class="game-inner relative rounded-2xl h-[400px] overflow-hidden border border-white/10 shadow-2xl">
+                        <img src="./assets/chasers.jpg" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition duration-700" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=Chasers'">
+                        <div class="absolute inset-0 game-overlay flex flex-col justify-end p-8">
+                            <div class="game-content">
+                                <p class="text-pink-400 font-bold tracking-widest text-sm mb-2 uppercase">Meme Horror</p>
+                                <h3 class="text-4xl font-space font-bold text-white drop-shadow-lg">Chasers</h3>
                             </div>
                         </div>
                     </div>
                 </a>
 
-                <a href="https://alawyds.itch.io/backrooms" target="_blank" class="block group" data-tilt data-tilt-max="15" data-tilt-speed="400">
-                    <div class="card-3d glass-card rounded-2xl h-80 relative overflow-hidden border border-purple-500/30">
-                        <img src="./assets/backrooms.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=Backrooms'">
-                        <div class="absolute inset-0 game-hover-overlay flex flex-col justify-end p-6">
-                            <div class="card-3d-content">
-                                <h3 class="text-3xl font-extrabold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">Backrooms</h3>
-                                <p class="text-sm text-green-300 font-bold uppercase tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">Survival Horror</p>
+                <!-- Backrooms -->
+                <a href="https://alawyds.itch.io/backrooms" target="_blank" class="game-card block group" data-tilt data-tilt-max="10" data-tilt-speed="400">
+                    <div class="game-inner relative rounded-2xl h-[400px] overflow-hidden border border-white/10 shadow-2xl">
+                        <img src="./assets/backrooms.jpg" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition duration-700" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=Backrooms'">
+                        <div class="absolute inset-0 game-overlay flex flex-col justify-end p-8">
+                            <div class="game-content">
+                                <p class="text-green-400 font-bold tracking-widest text-sm mb-2 uppercase">Survival Horror</p>
+                                <h3 class="text-4xl font-space font-bold text-white drop-shadow-lg">Backrooms</h3>
                             </div>
                         </div>
                     </div>
@@ -184,51 +182,27 @@
         </div>
     </section>
 
-    <!-- Tech Section -->
-    <section class="py-20 relative z-10">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl md:text-5xl font-bold mb-12 text-center">Technical <span class="gradient-text">Expertise</span></h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="glass-card p-6 rounded-2xl border-t border-purple-500/30" data-tilt>
-                    <h3 class="text-xl font-bold text-white mb-2">🎬 Video & Audio</h3>
-                    <p class="text-sm text-gray-400">Expert in After Effects (2D/3D Element), Filmora, Soundtrap, and Audacity.</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border-t border-pink-500/30" data-tilt>
-                    <h3 class="text-xl font-bold text-white mb-2">🎨 UI/UX & Design</h3>
-                    <p class="text-sm text-gray-400">Eye for color palettes. Image editing in Pixlr. Soon: Photoshop & Blender.</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border-t border-blue-500/30" data-tilt>
-                    <h3 class="text-xl font-bold text-white mb-2">🐧 Servers & Hosting</h3>
-                    <p class="text-sm text-gray-400">Ubuntu Linux (22.04/24.04). Expert Discord Server architect.</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border-t border-green-500/30" data-tilt>
-                    <h3 class="text-xl font-bold text-white mb-2">⚙️ Core Programming</h3>
-                    <p class="text-sm text-gray-400">C# (6+ years), .NET, Unity (Expert). C++ and Python.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer id="contact" class="glass-card border-t-2 border-purple-500/50 pt-16 pb-8 mt-12 relative z-10 bg-black/80">
+    <!-- Contact Section -->
+    <footer id="contact" class="pt-24 pb-12 relative z-10">
         <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold mb-8 text-white">Let's <span class="gradient-text">Connect</span></h2>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-12">
-                <div class="glass-card px-8 py-4 rounded-2xl border border-indigo-500/30 w-full md:w-auto">
-                    <p class="text-gray-400 text-sm mb-1">Discord Tag</p>
-                    <p class="text-2xl font-bold text-indigo-400 font-mono">G9ES</p>
+            <h2 class="text-5xl font-space font-bold mb-10 text-white">LET'S <span class="gradient-text">CONNECT</span></h2>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-16">
+                <div class="glass-panel px-10 py-6 rounded-2xl border border-indigo-500/30 w-full md:w-auto hover:-translate-y-2 transition duration-300">
+                    <p class="text-gray-400 text-sm mb-2 uppercase tracking-widest">Discord</p>
+                    <p class="text-3xl font-bold text-indigo-400">G9ES</p>
                 </div>
-                <div class="glass-card px-8 py-4 rounded-2xl border border-pink-500/30 w-full md:w-auto">
-                    <p class="text-gray-400 text-sm mb-1">Email</p>
-                    <a href="mailto:dsremixes5@gmail.com" class="text-xl font-bold text-pink-400 hover:text-white transition">dsremixes5@gmail.com</a>
+                <div class="glass-panel px-10 py-6 rounded-2xl border border-pink-500/30 w-full md:w-auto hover:-translate-y-2 transition duration-300">
+                    <p class="text-gray-400 text-sm mb-2 uppercase tracking-widest">Email</p>
+                    <a href="mailto:dsremixes5@gmail.com" class="text-2xl font-bold text-pink-400 hover:text-white transition">dsremixes5@gmail.com</a>
                 </div>
             </div>
-            <p class="text-gray-600 text-sm">&copy; 2026 Ali Saleh (EG-Krypt). AASU Class of '30.</p>
+            <p class="text-gray-600 text-sm font-space tracking-widest">&copy; 2026 ALI SALEH. AASU CLASS OF '30.</p>
         </div>
     </footer>
 
     <script>
         particlesJS('particles-js', {
-            "particles": { "number": { "value": 80 }, "color": { "value": "#a855f7" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5 }, "size": { "value": 3 }, "line_linked": { "enable": true, "color": "#c084fc", "opacity": 0.2 }, "move": { "enable": true, "speed": 2 } }, "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" } } }
+            "particles": { "number": { "value": 60 }, "color": { "value": "#a855f7" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3 }, "size": { "value": 2 }, "line_linked": { "enable": true, "color": "#c084fc", "opacity": 0.1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" } } }
         });
 
         function bootOS(e) {
@@ -236,8 +210,8 @@
             const overlay = document.getElementById('transition-overlay');
             const core = document.getElementById('warp-core');
             overlay.classList.add('active-transition');
-            setTimeout(() => { core.classList.add('warp-speed'); }, 100);
-            setTimeout(() => { window.location.href = 'os.html'; }, 1300);
+            setTimeout(() => { core.classList.add('warp-speed'); }, 50);
+            setTimeout(() => { window.location.href = 'os.html'; }, 900); // Links directly to os.html
         }
     </script>
 </body>
