@@ -1,461 +1,556 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KryptOS - Interactive Desktop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;800&display=swap');
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; overflow: hidden; margin: 0; padding: 0; user-select: none; }
-        .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+<title>KryptOS — Ali Saleh's Interactive Desktop</title>
+<meta name="description" content="KryptOS is an interactive desktop environment built by Ali Saleh: draggable windows, a working terminal, paint app and calculator, with his certificates, skills and projects filed inside.">
+<link rel="canonical" href="https://kryptdev.me/os.html">
+<meta name="theme-color" content="#07030f">
+<meta name="color-scheme" content="dark">
 
-        /* High-End Sci-Fi Desktop Wallpaper */
-        .desktop-bg {
-            position: fixed; inset: 0; z-index: 1;
-            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') center/cover no-repeat;
-        }
-        
-        /* 3D Warp Intro */
-        #warp-container {
-            position: fixed; inset: 0; z-index: 9999; background: black;
-            display: flex; align-items: center; justify-content: center;
-            animation: hideWarp 0.1s forwards 2s;
-        }
-        .warp-text { color: #a855f7; font-size: 3rem; font-family: 'Share Tech Mono'; animation: zoomIn 2s cubic-bezier(0.5, 0, 0.1, 1) forwards; }
-        @keyframes zoomIn { 0% { transform: translateZ(-2000px) scale(0.1); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateZ(1000px) scale(5); opacity: 0; } }
-        @keyframes hideWarp { to { display: none; z-index: -10; } }
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kryptdev.me/os.html">
+<meta property="og:title" content="KryptOS — an interactive desktop by Ali Saleh">
+<meta property="og:description" content="Draggable windows, a working terminal, paint and calculator apps. Built from scratch with plain HTML, CSS and JavaScript.">
+<meta property="og:image" content="https://kryptdev.me/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kryptdev.me/assets/img/og.png">
 
-        /* Taskbar */
-        .taskbar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 50px;
-            background: rgba(5, 2, 10, 0.85); backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(168, 85, 247, 0.3); z-index: 9000;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;
-        }
+<link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png">
+<link rel="manifest" href="./site.webmanifest">
 
-        /* Start Menu */
-        #start-menu {
-            position: fixed; bottom: 60px; left: 10px; width: 320px;
-            background: rgba(15, 10, 25, 0.95); backdrop-filter: blur(20px);
-            border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8); z-index: 8999;
-            transform: translateY(20px); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #start-menu.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
-        .start-item { padding: 12px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; border-radius: 8px; margin: 5px 10px; }
-        .start-item:hover { background: rgba(168, 85, 247, 0.3); }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Outfit:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
 
-        /* Draggable Window Container */
-        .app-window {
-            position: absolute; top: 10%; left: 10%;
-            width: 800px; height: 550px; max-width: 90vw; max-height: 80vh;
-            background: rgba(15, 10, 25, 0.9); backdrop-filter: blur(25px);
-            border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
-            display: none; flex-direction: column; z-index: 100;
-            animation: popIn 0.3s ease-out forwards;
-        }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* Window Title Bar */
-        .title-bar {
-            height: 40px; background: rgba(0,0,0,0.6); border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
-            cursor: grab;
-        }
-        .title-bar:active { cursor: grabbing; }
-        .window-content { flex: 1; overflow-y: auto; padding: 20px; }
-        .window-content::-webkit-scrollbar { width: 8px; }
-        .window-content::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 4px; }
-
-        /* Desktop Grid layout */
-        #desktop-icons {
-            position: absolute; top: 20px; left: 20px; z-index: 10;
-            display: grid; grid-template-columns: repeat(auto-fill, 100px); grid-auto-rows: 110px; gap: 15px;
-            height: calc(100vh - 80px); flex-direction: column;
-        }
-        .desktop-icon { width: 90px; height: 90px; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-        .desktop-icon:hover { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
-        .desktop-icon span { font-size: 2.5rem; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); margin-bottom: 5px; }
-        .desktop-icon p { font-size: 0.75rem; text-shadow: 1px 1px 2px black; font-weight: 600; white-space: nowrap; }
-
-        /* Paint App */
-        #paintCanvas { background: #fff; border-radius: 8px; cursor: crosshair; width: 100%; height: 400px; }
-        
-        /* Calculator App */
-        .calc-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .calc-btn:hover { background: rgba(168, 85, 247, 0.5); }
-    </style>
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/os.css">
 </head>
+
 <body>
 
-    <!-- 3D Warp Intro -->
-    <div id="warp-container">
-        <div class="warp-text">BOOTING KRYPT_OS...</div>
-    </div>
+<!-- Boot screen. Skippable, and gone in under two seconds. -->
+<div id="boot">
+  <div class="boot__mark" aria-hidden="true">K</div>
+  <p class="boot__label">BOOTING KRYPTOS</p>
+  <div class="boot__bar" role="presentation"><i></i></div>
+  <button class="boot__skip" type="button" id="boot-skip">SKIP</button>
+</div>
 
-    <div class="desktop-bg"></div>
+<div class="wallpaper" aria-hidden="true"></div>
 
-    <!-- Desktop Icons Area -->
-    <div id="desktop-icons">
-        <div class="desktop-icon" onclick="openApp('app-degrees')"><span>🎓</span><p>Degrees</p></div>
-        <div class="desktop-icon" onclick="openApp('app-skills')"><span>⚙️</span><p>Skills</p></div>
-        <div class="desktop-icon" onclick="openApp('app-games')"><span>🎮</span><p>Games</p></div>
-        <div class="desktop-icon" onclick="openApp('app-gallery')"><span>🖼️</span><p>Gallery</p></div>
-        <div class="desktop-icon" onclick="openApp('app-contact')"><span>✉️</span><p>Contact</p></div>
-        <div class="desktop-icon" onclick="openApp('app-paint')"><span>🎨</span><p>Paint</p></div>
-        <div class="desktop-icon" onclick="openApp('app-calc')"><span>🧮</span><p>Calculator</p></div>
-        <div class="desktop-icon" onclick="openApp('app-term')"><span>🖥️</span><p>Terminal</p></div>
-    </div>
+<p class="sr-only" role="status" id="os-status"></p>
 
-    <!-- START MENU -->
-    <div id="start-menu">
-        <div class="p-4 border-b border-purple-500/30 flex items-center gap-3">
-            <img src="https://github.com/egkrypt.png" class="w-10 h-10 rounded-full border border-purple-500">
-            <div><p class="font-bold">Ali Saleh</p><p class="text-xs text-purple-400">System Admin</p></div>
+<!-- ============================ DESKTOP ============================ -->
+<div id="desktop">
+  <h1 class="sr-only">KryptOS — interactive desktop by Ali Saleh</h1>
+
+  <nav id="icons" aria-label="Desktop apps">
+    <button class="icon" type="button" data-open-app="app-files">
+      <span class="glyph" aria-hidden="true">🗂️</span><span class="label">Certificates</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-skills">
+      <span class="glyph" aria-hidden="true">⚙️</span><span class="label">Skills</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-games">
+      <span class="glyph" aria-hidden="true">🎮</span><span class="label">Games</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-gallery">
+      <span class="glyph" aria-hidden="true">🖼️</span><span class="label">Projects</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-term">
+      <span class="glyph" aria-hidden="true">🖥️</span><span class="label">Terminal</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-paint">
+      <span class="glyph" aria-hidden="true">🎨</span><span class="label">Paint</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-calc">
+      <span class="glyph" aria-hidden="true">🧮</span><span class="label">Calculator</span>
+    </button>
+    <button class="icon" type="button" data-open-app="app-contact">
+      <span class="glyph" aria-hidden="true">✉️</span><span class="label">Contact</span>
+    </button>
+  </nav>
+
+  <!-- ---------------------- APP: Certificates ---------------------- -->
+  <section class="win" id="app-files" data-title="Certificates" data-glyph="🗂️"
+           data-open="false" aria-labelledby="t-files" style="width:min(780px,calc(100vw - 2rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">🗂️</span>
+      <h2 id="t-files">File Explorer — Certificates</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body">
+      <p class="pathbar"><span aria-hidden="true">📁</span> C:\Users\Ali\Degrees_and_Certs <span style="margin-left:auto">11 items</span></p>
+
+      <div class="filegrid">
+        <a class="file" href="./Degrees/Kuwait_Science_Award.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">🥇</span><span>Kuwait Science Award<br><small style="color:var(--amber)">1st place</small></span>
+        </a>
+        <a class="file" href="./Degrees/HP_Cybersecurity.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">🛡️</span><span>Cybersecurity<br><small style="color:var(--dim)">HP LIFE</small></span>
+        </a>
+        <a class="file" href="./Degrees/HP_Presentations.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">📊</span><span>Presentations<br><small style="color:var(--dim)">HP LIFE</small></span>
+        </a>
+        <a class="file" href="./Degrees/HP_Emails.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">✉️</span><span>Effective email<br><small style="color:var(--dim)">HP LIFE</small></span>
+        </a>
+        <a class="file" href="./Degrees/Coursera_WP.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">🌐</span><span>WordPress<br><small style="color:var(--dim)">Coursera</small></span>
+        </a>
+        <a class="file" href="./Degrees/Coursera_Excel.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">📗</span><span>Excel<br><small style="color:var(--dim)">Coursera</small></span>
+        </a>
+        <a class="file" href="./Degrees/Coursera_Word.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">📘</span><span>Word<br><small style="color:var(--dim)">Coursera</small></span>
+        </a>
+        <a class="file" href="./Degrees/Coursera_Trello.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">📋</span><span>Trello<br><small style="color:var(--dim)">Coursera</small></span>
+        </a>
+        <a class="file" href="./Degrees/Coursera_Canva.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">📝</span><span>Canva<br><small style="color:var(--dim)">Coursera</small></span>
+        </a>
+        <a class="file" href="./Degrees/Typing_Certs.pdf" target="_blank" rel="noopener">
+          <span class="glyph" aria-hidden="true">⌨️</span><span>Typing<br><small style="color:var(--dim)">4 certificates</small></span>
+        </a>
+        <div class="file file--off">
+          <span class="glyph" aria-hidden="true">🎓</span><span>AASU degree<br><small>class of 2030</small></span>
         </div>
-        <div class="py-2 overflow-y-auto max-h-[400px]">
-            <div class="start-item" onclick="openApp('app-degrees')">🎓 <span>Degrees & Certs</span></div>
-            <div class="start-item" onclick="openApp('app-skills')">⚙️ <span>Detailed Skills</span></div>
-            <div class="start-item" onclick="openApp('app-games')">🎮 <span>Published Games</span></div>
-            <div class="start-item" onclick="openApp('app-gallery')">🖼️ <span>Image Gallery</span></div>
-            <div class="start-item" onclick="openApp('app-contact')">✉️ <span>Contact Info</span></div>
-            <div class="start-item" onclick="openApp('app-paint')">🎨 <span>Krypt Paint</span></div>
-            <div class="start-item" onclick="openApp('app-calc')">🧮 <span>Calculator</span></div>
-            <div class="start-item" onclick="openApp('app-term')">🖥️ <span>Terminal Console</span></div>
-        </div>
-        <div class="p-2 border-t border-purple-500/30">
-            <div class="start-item text-red-400 hover:bg-red-500/20" onclick="window.location.href='index.html'">🚪 <span>Log Off / Exit OS</span></div>
-        </div>
+      </div>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- TASKBAR -->
-    <div class="taskbar">
-        <div class="flex items-center gap-2">
-            <div id="btn-start" class="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xl text-white shadow-[0_0_15px_rgba(219,39,119,0.6)] cursor-pointer hover:scale-105 transition" onclick="toggleStart()">
-                K
+  <!-- ---------------------- APP: Skills ---------------------- -->
+  <section class="win" id="app-skills" data-title="Skills" data-glyph="⚙️"
+           data-open="false" aria-labelledby="t-skills" style="width:min(680px,calc(100vw - 2rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">⚙️</span>
+      <h2 id="t-skills">Skills</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body">
+      <div class="skillset">
+
+        <section>
+          <h3>Programming</h3>
+          <dl>
+            <div class="skillrow">
+              <dt>C#
+                <span class="level" role="img" aria-label="5 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i></span>
+              </dt>
+              <dd>Six years, since late 2019. Main language for both game and desktop work.</dd>
             </div>
-        </div>
-        <div class="flex items-center gap-4 text-sm font-mono-tech text-gray-300">
-            <div class="flex items-center gap-1">
-                <!-- WiFi Icon -->
-                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+            <div class="skillrow">
+              <dt>Unity
+                <span class="level" role="img" aria-label="5 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i></span>
+              </dt>
+              <dd>Over 30 games built, three of them published.</dd>
             </div>
-            <div class="flex flex-col text-right">
-                <span id="os-time" class="font-bold text-white">00:00</span>
-                <span id="os-date">2026-04-11</span>
+            <div class="skillrow">
+              <dt>.NET
+                <span class="level" role="img" aria-label="4 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i></span>
+              </dt>
+              <dd>Desktop tools and audio software.</dd>
             </div>
-        </div>
+            <div class="skillrow">
+              <dt>C++
+                <span class="level" role="img" aria-label="2 out of 5"><i data-on="true"></i><i data-on="true"></i><i></i><i></i><i></i></span>
+              </dt>
+              <dd>Low-level work. Currently learning Windows kernel driver development.</dd>
+            </div>
+            <div class="skillrow">
+              <dt>Python
+                <span class="level" role="img" aria-label="2 out of 5"><i data-on="true"></i><i data-on="true"></i><i></i><i></i><i></i></span>
+              </dt>
+              <dd>Learning, with a focus on AI and machine learning.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h3>Motion, audio and design</h3>
+          <dl>
+            <div class="skillrow">
+              <dt>After Effects
+                <span class="level" role="img" aria-label="4 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i></span>
+              </dt>
+              <dd>Editing, animation and montages, in 2D and 3D using Element.</dd>
+            </div>
+            <div class="skillrow">
+              <dt>Audio design
+                <span class="level" role="img" aria-label="3 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i><i></i></span>
+              </dt>
+              <dd>After Effects, Soundtrap and Audacity.</dd>
+            </div>
+            <div class="skillrow">
+              <dt>Image editing
+                <span class="level" role="img" aria-label="3 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i><i></i></span>
+              </dt>
+              <dd>Pixlr and Filmora for video.</dd>
+            </div>
+            <div class="skillrow">
+              <dt>UI and UX
+                <span class="level" role="img" aria-label="4 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i></span>
+              </dt>
+              <dd>Interface layout and colour choices that hold up on screen.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h3>Systems</h3>
+          <dl>
+            <div class="skillrow">
+              <dt>Linux servers
+                <span class="level" role="img" aria-label="3 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i><i></i></span>
+              </dt>
+              <dd>Hosting on Ubuntu 22.04 and 24.04 LTS.</dd>
+            </div>
+            <div class="skillrow">
+              <dt>Discord
+                <span class="level" role="img" aria-label="4 out of 5"><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i data-on="true"></i><i></i></span>
+              </dt>
+              <dd>Server architecture, roles and moderation setup.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h3>Learning next</h3>
+          <ul class="learning">
+            <li>Blender</li><li>Photoshop</li><li>Illustrator</li>
+            <li>Kernel drivers</li><li>Python for AI</li>
+          </ul>
+        </section>
+
+      </div>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- APP: Degrees (All restored) -->
-    <div class="app-window" id="app-degrees" style="width: 850px;">
-        <div class="title-bar">
-            <span class="font-bold text-sm">🎓 File Explorer - Degrees</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-degrees')"></button></div>
+  <!-- ---------------------- APP: Games ---------------------- -->
+  <section class="win" id="app-games" data-title="Games" data-glyph="🎮"
+           data-open="false" aria-labelledby="t-games" style="width:min(620px,calc(100vw - 2rem));height:min(440px,calc(100vh - 6rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">🎮</span>
+      <h2 id="t-games">Games Library</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body">
+      <div class="gamelist">
+        <a href="https://alawyds.itch.io/the-asylum" target="_blank" rel="noopener noreferrer">
+          <picture>
+            <source srcset="./assets/img/asylum.webp" type="image/webp">
+            <img class="cover" src="./assets/img/asylum.png" width="315" height="250" loading="lazy" alt="">
+          </picture>
+          <div><h3>The Asylum</h3><p>Puzzle horror</p></div>
+          <span class="go">itch.io ↗</span>
+        </a>
+        <a href="https://alawyds.itch.io/chasers" target="_blank" rel="noopener noreferrer">
+          <picture>
+            <source srcset="./assets/img/chasers.webp" type="image/webp">
+            <img class="cover" src="./assets/img/chasers.png" width="315" height="250" loading="lazy" alt="">
+          </picture>
+          <div><h3>Chasers</h3><p>Meme horror</p></div>
+          <span class="go">itch.io ↗</span>
+        </a>
+        <a href="https://alawyds.itch.io/backrooms" target="_blank" rel="noopener noreferrer">
+          <picture>
+            <source srcset="./assets/img/backrooms.webp" type="image/webp">
+            <img class="cover" src="./assets/img/backrooms.png" width="315" height="250" loading="lazy" alt="">
+          </picture>
+          <div><h3>Backrooms</h3><p>Survival horror</p></div>
+          <span class="go">itch.io ↗</span>
+        </a>
+        <div>
+          <span class="cover" aria-hidden="true" style="display:grid;place-items:center;background:rgba(236,72,153,.12);font-size:1.3rem">🔒</span>
+          <div><h3>HUSH.</h3><p>In development for Steam</p></div>
+          <span class="go">soon</span>
         </div>
-        <div class="window-content">
-            <div class="bg-black/50 border border-purple-500/30 p-2 mb-4 rounded font-mono-tech text-sm">C:\Users\Ali\Degrees_and_Certs</div>
-            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                
-                <!-- Award -->
-                <a href="./Degrees/Kuwait_Science_Award.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">🥇</div><p class="text-xs text-yellow-400 font-bold">Science_Award.pdf</p>
-                </a>
-                <!-- Degree -->
-                <div class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2 opacity-80">🎓</div><p class="text-xs text-gray-300">AASU_Degree.sys</p>
-                </div>
-                <!-- 11 Certs -->
-                <a href="./Degrees/HP_Cybersecurity.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">🛡️</div><p class="text-xs text-blue-300">Cybersecurity.pdf</p>
-                </a>
-                <a href="./Degrees/Coursera_WP.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">🌐</div><p class="text-xs text-cyan-300">WordPress.pdf</p>
-                </a>
-                <a href="./Degrees/HP_Presentations.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">📊</div><p class="text-xs text-purple-300">Presentations.pdf</p>
-                </a>
-                <a href="./Degrees/Coursera_Excel.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">📗</div><p class="text-xs text-green-400">Excel.pdf</p>
-                </a>
-                <a href="./Degrees/Coursera_Word.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">📘</div><p class="text-xs text-blue-400">Word.pdf</p>
-                </a>
-                <div class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">💻</div><p class="text-xs text-gray-300">MS_Learn.url</p>
-                </div>
-                <a href="./Degrees/Typing_Certs.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">⌨️</div><p class="text-xs text-pink-300">Typing_4Certs.pdf</p>
-                </a>
-                <a href="./Degrees/Coursera_Trello.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">📋</div><p class="text-xs text-indigo-300">Trello.pdf</p>
-                </a>
-                <a href="./Degrees/Coursera_Canva.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">📝</div><p class="text-xs text-orange-300">Canva_Resume.pdf</p>
-                </a>
-                <a href="./Degrees/HP_Emails.pdf" target="_blank" class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">✉️</div><p class="text-xs text-yellow-300">Emails.pdf</p>
-                </a>
-                <div class="text-center p-3 hover:bg-white/10 rounded cursor-pointer border border-transparent hover:border-white/20">
-                    <div class="text-4xl mb-2">📱</div><p class="text-xs text-pink-500">HubSpot_Insta.url</p>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- APP: Un-summarized Detailed Skills -->
-    <div class="app-window" id="app-skills" style="width: 700px; height: 600px;">
-        <div class="title-bar">
-            <span class="font-bold text-sm">⚙️ Raw Skills Output</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-skills')"></button></div>
-        </div>
-        <div class="window-content font-mono-tech text-green-400 bg-black/80">
-            <p class="mb-4 text-purple-400">> EXECUTING SKILLS_LOG.SH ...</p>
-            <ul class="space-y-4 text-sm leading-relaxed">
-                <li>1- Expert in video editing using Adobe After Effects (2D and 3D using Element) and Filmora. In after effects i can do normal editing - animations and montages.</li>
-                <li>2- I know Audio Design in After Effects, Soundtrap, And Audacity.</li>
-                <li>3- I know how to edit images using Pixlr and Hoping to learn Photoshop.</li>
-                <li>4- I know how to design UI/UX and know how to select colors and whats best for the eye.</li>
-                <li>5- Im hoping to learn Blender for 3D design and Photoshop and Illustrate for 2D design.</li>
-                <li>6- I know how to design Discord Servers.</li>
-                <li>7- I know Server hosting in Ubuntu 22.04 Lts and 24.04 Lts.</li>
-                <li class="mt-4 pt-4 border-t border-green-500/30">
-                    <span class="text-white">PROGRAMMING:</span><br>
-                    I know C# for 6 years also since the end of 2019.<br>
-                    Expert .Net C# and Unity C# (Over 30 Games made).<br>
-                    I also know C++ hacking and Learning Kernel Drivers Development.<br>
-                    Python AI learning (Beginner in C++ and Python but still learning).
-                </li>
-            </ul>
-        </div>
+  <!-- ---------------------- APP: Projects ---------------------- -->
+  <section class="win" id="app-gallery" data-title="Projects" data-glyph="🖼️"
+           data-open="false" aria-labelledby="t-gallery">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">🖼️</span>
+      <h2 id="t-gallery">Projects</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body">
+      <div class="gallery">
+        <button class="shot" type="button"
+                data-shot="./assets/img/xray-prototype.png"
+                data-alt="Screenshot of the X-Ray AI prototype interface"
+                data-cap="X-Ray AI prototype — reads X-ray images and flags findings for review.">
+          <picture>
+            <source srcset="./assets/img/xray-prototype.webp" type="image/webp">
+            <img src="./assets/img/xray-prototype.png" width="799" height="475" loading="lazy"
+                 alt="Screenshot of the X-Ray AI prototype interface">
+          </picture>
+          <span class="cap">X-Ray AI prototype</span>
+        </button>
+
+        <button class="shot" type="button"
+                data-shot="./assets/img/elevate-studio.jpg"
+                data-alt="Screenshot of the Elevate Voice Studio interface"
+                data-cap="Elevate Voice Studio — a workspace for recording, cleaning up and mixing spoken audio.">
+          <picture>
+            <source srcset="./assets/img/elevate-studio.webp" type="image/webp">
+            <img src="./assets/img/elevate-studio.jpg" width="1277" height="760" loading="lazy"
+                 alt="Screenshot of the Elevate Voice Studio interface">
+          </picture>
+          <span class="cap">Elevate Voice Studio</span>
+        </button>
+      </div>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- APP: Games -->
-    <div class="app-window" id="app-games">
-        <div class="title-bar">
-            <span class="font-bold text-sm">🎮 Games Library</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-games')"></button></div>
+  <!-- ---------------------- APP: Contact ---------------------- -->
+  <section class="win" id="app-contact" data-title="Contact" data-glyph="✉️"
+           data-open="false" aria-labelledby="t-contact" style="width:min(520px,calc(100vw - 2rem));height:min(380px,calc(100vh - 6rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">✉️</span>
+      <h2 id="t-contact">Contact</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body">
+      <dl class="contact-list">
+        <div class="contact-row">
+          <dt>Email</dt>
+          <dd><a href="mailto:dsremixes5@gmail.com">dsremixes5@gmail.com</a>
+            <button class="copy" type="button" data-copy="dsremixes5@gmail.com" aria-label="Copy email address">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M15 5H5a2 2 0 0 0-2 2v10"/></svg>
+          </button></dd>
         </div>
-        <div class="window-content">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a href="https://alawyds.itch.io/the-asylum" target="_blank" class="bg-black/60 p-4 rounded-xl border border-red-500/30 hover:border-red-500 transition">
-                    <h3 class="text-xl font-bold text-white">The Asylum</h3><p class="text-red-400 text-sm">Puzzle Horror</p>
-                </a>
-                <a href="https://alawyds.itch.io/chasers" target="_blank" class="bg-black/60 p-4 rounded-xl border border-pink-500/30 hover:border-pink-500 transition">
-                    <h3 class="text-xl font-bold text-white">Chasers</h3><p class="text-pink-400 text-sm">Meme Horror</p>
-                </a>
-                <a href="https://alawyds.itch.io/backrooms" target="_blank" class="bg-black/60 p-4 rounded-xl border border-green-500/30 hover:border-green-500 transition">
-                    <h3 class="text-xl font-bold text-white">Backrooms</h3><p class="text-green-400 text-sm">Survival Horror</p>
-                </a>
-            </div>
+        <div class="contact-row">
+          <dt>Discord</dt>
+          <dd>G9ES
+            <button class="copy" type="button" data-copy="G9ES" aria-label="Copy Discord username">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M15 5H5a2 2 0 0 0-2 2v10"/></svg>
+          </button></dd>
         </div>
+        <div class="contact-row">
+          <dt>Server</dt>
+          <dd><a href="https://discord.gg/ExMbGbcszn" target="_blank" rel="noopener noreferrer">Eagles Discord ↗</a></dd>
+        </div>
+        <div class="contact-row">
+          <dt>Games</dt>
+          <dd><a href="https://alawyds.itch.io/" target="_blank" rel="noopener noreferrer">itch.io profile ↗</a></dd>
+        </div>
+        <div class="contact-row">
+          <dt>Video</dt>
+          <dd><a href="https://www.youtube.com/@EG-Krypt" target="_blank" rel="noopener noreferrer">YouTube ↗</a></dd>
+        </div>
+      </dl>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- APP: Contact -->
-    <div class="app-window" id="app-contact" style="width: 500px; height: 400px;">
-        <div class="title-bar">
-            <span class="font-bold text-sm">✉️ Contact Info</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-contact')"></button></div>
+  <!-- ---------------------- APP: Paint ---------------------- -->
+  <section class="win" id="app-paint" data-title="Paint" data-glyph="🎨"
+           data-open="false" aria-labelledby="t-paint" style="width:min(660px,calc(100vw - 2rem));height:min(520px,calc(100vh - 6rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">🎨</span>
+      <h2 id="t-paint">Krypt Paint</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body win-body--flush">
+      <div class="paint-wrap">
+        <div class="toolbar">
+          <button id="tool-brush" type="button" aria-pressed="true">Brush</button>
+          <button id="tool-eraser" type="button" aria-pressed="false">Eraser</button>
+          <label for="paint-color">Colour
+            <input type="color" id="paint-color" value="#a855f7">
+          </label>
+          <label for="paint-size">Size
+            <input type="range" id="paint-size" min="1" max="40" value="6">
+            <output id="paint-size-out" class="mono">6px</output>
+          </label>
+          <span class="spacer"></span>
+          <button id="paint-undo" type="button">Undo</button>
+          <button id="paint-clear" type="button">Clear</button>
+          <button id="paint-save" type="button">Save PNG</button>
         </div>
-        <div class="window-content flex flex-col justify-center items-center text-center">
-            <h2 class="text-3xl font-bold mb-6 text-white">Ping Me</h2>
-            <div class="bg-indigo-900/30 p-4 rounded-lg border border-indigo-500/50 w-full mb-4">
-                <p class="text-indigo-200 text-sm">Discord</p>
-                <p class="text-2xl font-bold text-white tracking-widest">G9ES</p>
-            </div>
-            <div class="bg-pink-900/30 p-4 rounded-lg border border-pink-500/50 w-full">
-                <p class="text-pink-200 text-sm">Email</p>
-                <p class="text-xl font-bold text-white">dsremixes5@gmail.com</p>
-            </div>
+        <div class="canvas-host">
+          <canvas id="paint" role="img" aria-label="Drawing canvas — use a mouse, finger or stylus"></canvas>
         </div>
+      </div>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- APP: Paint -->
-    <div class="app-window" id="app-paint" style="width:650px; height:550px;">
-        <div class="title-bar">
-            <span class="font-bold text-sm">🎨 Krypt Paint 3D</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-paint')"></button></div>
+  <!-- ---------------------- APP: Calculator ---------------------- -->
+  <section class="win" id="app-calc" data-title="Calculator" data-glyph="🧮"
+           data-open="false" aria-labelledby="t-calc" style="width:min(340px,calc(100vw - 2rem));height:min(500px,calc(100vh - 6rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">🧮</span>
+      <h2 id="t-calc">Calculator</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body">
+      <div class="calc">
+        <div class="calc__screen">
+          <div class="calc__expr mono" id="calc-expr">&nbsp;</div>
+          <output class="calc__out" id="calc-out" aria-live="polite">0</output>
         </div>
-        <div class="window-content bg-gray-900 flex flex-col">
-            <div class="flex justify-between items-center mb-2">
-                <p class="text-sm text-gray-300">Draw something fun!</p>
-                <div class="flex gap-2">
-                    <input type="color" id="paintColor" value="#a855f7" class="cursor-pointer border-none bg-transparent w-8 h-8 rounded">
-                    <button onclick="clearCanvas()" class="px-3 py-1 bg-red-600 rounded text-xs text-white">Clear</button>
-                </div>
-            </div>
-            <canvas id="paintCanvas"></canvas>
+        <div class="keys">
+          <button type="button" class="fn" data-key="C">C</button>
+          <button type="button" class="fn" data-key="back" aria-label="Backspace">⌫</button>
+          <button type="button" class="fn" data-key="(">(</button>
+          <button type="button" class="fn" data-key=")">)</button>
+
+          <button type="button" data-key="7">7</button>
+          <button type="button" data-key="8">8</button>
+          <button type="button" data-key="9">9</button>
+          <button type="button" class="op" data-key="/" aria-label="Divide">÷</button>
+
+          <button type="button" data-key="4">4</button>
+          <button type="button" data-key="5">5</button>
+          <button type="button" data-key="6">6</button>
+          <button type="button" class="op" data-key="*" aria-label="Multiply">×</button>
+
+          <button type="button" data-key="1">1</button>
+          <button type="button" data-key="2">2</button>
+          <button type="button" data-key="3">3</button>
+          <button type="button" class="op" data-key="-" aria-label="Subtract">−</button>
+
+          <button type="button" data-key="0">0</button>
+          <button type="button" data-key=".">.</button>
+          <button type="button" class="fn" data-key="%" aria-label="Percent">%</button>
+          <button type="button" class="op" data-key="+" aria-label="Add">+</button>
+
+          <button type="button" class="eq" data-key="=" aria-label="Equals">=</button>
         </div>
+      </div>
     </div>
+  </section>
 
-    <!-- APP: Calculator -->
-    <div class="app-window" id="app-calc" style="width:350px; height:480px;">
-        <div class="title-bar">
-            <span class="font-bold text-sm">🧮 Calculator</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-calc')"></button></div>
+  <!-- ---------------------- APP: Terminal ---------------------- -->
+  <section class="win" id="app-term" data-title="Terminal" data-glyph="🖥️"
+           data-open="false" aria-labelledby="t-term" data-autofocus="#term-input"
+           style="width:min(640px,calc(100vw - 2rem));height:min(420px,calc(100vh - 6rem))">
+    <header class="titlebar">
+      <span class="glyph" aria-hidden="true">🖥️</span>
+      <h2 id="t-term">kshell</h2>
+      <div class="win-btns">
+        <button class="min" type="button" aria-label="Minimise window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="max" type="button" aria-label="Maximise window" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="close" type="button" aria-label="Close window"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      </div>
+    </header>
+    <div class="win-body win-body--flush">
+      <div class="term">
+        <div class="term__out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output"></div>
+        <div class="term__line">
+          <span class="ps1" aria-hidden="true">ali@kryptos:~$</span>
+          <label class="sr-only" for="term-input">Terminal command</label>
+          <input id="term-input" type="text" autocomplete="off" autocapitalize="off"
+                 spellcheck="false" enterkeyhint="send" placeholder="type help">
         </div>
-        <div class="window-content bg-black flex flex-col">
-            <input type="text" id="calc-display" class="w-full bg-white/10 text-white text-right text-3xl p-4 rounded mb-4 border border-white/20 outline-none font-mono-tech" disabled value="">
-            <div class="grid grid-cols-4 gap-2 flex-1">
-                <button class="calc-btn text-red-400" onclick="calcInput('C')">C</button>
-                <button class="calc-btn" onclick="calcInput('/')">/</button>
-                <button class="calc-btn" onclick="calcInput('*')">x</button>
-                <button class="calc-btn text-purple-400" onclick="calcInput('-')">-</button>
-                
-                <button class="calc-btn" onclick="calcInput('7')">7</button>
-                <button class="calc-btn" onclick="calcInput('8')">8</button>
-                <button class="calc-btn" onclick="calcInput('9')">9</button>
-                <button class="calc-btn text-purple-400" rowspan="2" onclick="calcInput('+')">+</button>
-                
-                <button class="calc-btn" onclick="calcInput('4')">4</button>
-                <button class="calc-btn" onclick="calcInput('5')">5</button>
-                <button class="calc-btn" onclick="calcInput('6')">6</button>
-                <button class="calc-btn bg-purple-600 hover:bg-purple-500 text-white font-bold" style="grid-row: span 2;" onclick="calcInput('=')">=</button>
-                
-                <button class="calc-btn" onclick="calcInput('1')">1</button>
-                <button class="calc-btn" onclick="calcInput('2')">2</button>
-                <button class="calc-btn" onclick="calcInput('3')">3</button>
-                
-                <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button>
-                <button class="calc-btn" onclick="calcInput('.')">.</button>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="resize-handle" aria-hidden="true"></div>
+  </section>
 
-    <!-- APP: Terminal -->
-    <div class="app-window" id="app-term" style="width:600px; height:400px;">
-        <div class="title-bar">
-            <span class="font-bold text-sm">🖥️ Terminal Console</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-term')"></button></div>
-        </div>
-        <div class="window-content bg-black text-green-500 font-mono-tech text-sm p-4 overflow-y-auto" id="term-output">
-            <p>KryptOS [Version 10.0.19045.2486]</p>
-            <p>(c) Ali Saleh Corporation. All rights reserved.</p><br>
-            <p>C:\Users\Admin></p>
-            <p class="animate-pulse">_</p>
-        </div>
+</div>
+
+<!-- ============================ LIGHTBOX ============================ -->
+<div id="lightbox" data-open="false" role="dialog" aria-modal="true" aria-label="Project screenshot">
+  <button class="lb-close" id="lb-close" type="button" aria-label="Close image">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <figure style="margin:0">
+    <img id="lb-img" alt="">
+    <figcaption id="lb-cap"></figcaption>
+  </figure>
+</div>
+
+<!-- ============================ START MENU ============================ -->
+<div id="start-menu" data-open="false" aria-label="Start menu">
+  <div class="start-head">
+    <img src="https://github.com/egkrypt.png" width="40" height="40" alt=""
+         onerror="this.onerror=null;this.src='./assets/img/icon-192.png'">
+    <div>
+      <b>Ali Saleh</b>
+      <span>administrator</span>
     </div>
+  </div>
 
-    <!-- APP: Gallery -->
-    <div class="app-window" id="app-gallery">
-        <div class="title-bar">
-            <span class="font-bold text-sm">🖼️ Image Viewer</span>
-            <div class="flex gap-2"><button class="w-3 h-3 rounded-full bg-red-500" onclick="closeApp('app-gallery')"></button></div>
-        </div>
-        <div class="window-content grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="border border-purple-500/30 rounded overflow-hidden">
-                <img src="./assets/xray-prototype.jpg" class="w-full h-auto" onerror="this.style.display='none'">
-                <p class="p-2 text-xs bg-black text-white">X-Ray AI Prototype</p>
-            </div>
-            <div class="border border-purple-500/30 rounded overflow-hidden">
-                <img src="./assets/elevate-studio.jpg" class="w-full h-auto" onerror="this.style.display='none'">
-                <p class="p-2 text-xs bg-black text-white">Elevate Voice Studio</p>
-            </div>
-        </div>
-    </div>
+  <ul class="start-list">
+    <li><button type="button" data-open-app="app-files"><span class="glyph" aria-hidden="true">🗂️</span> Certificates <span class="hint">11</span></button></li>
+    <li><button type="button" data-open-app="app-skills"><span class="glyph" aria-hidden="true">⚙️</span> Skills</button></li>
+    <li><button type="button" data-open-app="app-games"><span class="glyph" aria-hidden="true">🎮</span> Games <span class="hint">3</span></button></li>
+    <li><button type="button" data-open-app="app-gallery"><span class="glyph" aria-hidden="true">🖼️</span> Projects</button></li>
+    <li><button type="button" data-open-app="app-term"><span class="glyph" aria-hidden="true">🖥️</span> Terminal <span class="hint">kshell</span></button></li>
+    <li><button type="button" data-open-app="app-paint"><span class="glyph" aria-hidden="true">🎨</span> Paint</button></li>
+    <li><button type="button" data-open-app="app-calc"><span class="glyph" aria-hidden="true">🧮</span> Calculator</button></li>
+    <li><button type="button" data-open-app="app-contact"><span class="glyph" aria-hidden="true">✉️</span> Contact</button></li>
+  </ul>
 
-    <!-- OS LOGIC -->
-    <script>
-        // 1. Clock
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('os-time').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
+  <div class="start-foot">
+    <a href="./index.html"><span aria-hidden="true">🚪</span> Log off — back to the site</a>
+  </div>
+</div>
 
-        // 2. Start Menu
-        function toggleStart() { document.getElementById('start-menu').classList.toggle('active'); }
-        document.addEventListener('click', (e) => {
-            if(!e.target.closest('#start-menu') && !e.target.closest('#btn-start')) {
-                document.getElementById('start-menu').classList.remove('active');
-            }
-        });
+<!-- ============================ TASKBAR ============================ -->
+<div class="taskbar">
+  <button class="start-btn" id="start-btn" type="button"
+          aria-expanded="false" aria-controls="start-menu" aria-label="Start menu">K</button>
 
-        // 3. Window Manager (Dragging and Z-Index)
-        let zIndexCounter = 100;
-        function openApp(appId) {
-            const app = document.getElementById(appId);
-            app.style.display = 'flex';
-            app.style.zIndex = ++zIndexCounter;
-            document.getElementById('start-menu').classList.remove('active');
-        }
-        function closeApp(appId) { document.getElementById(appId).style.display = 'none'; }
+  <div class="tasklist" id="tasklist" aria-label="Open windows"></div>
 
-        const windows = document.querySelectorAll('.app-window');
-        windows.forEach(win => {
-            const titleBar = win.querySelector('.title-bar');
-            let isDragging = false, startX, startY, initialX, initialY;
+  <div class="tray">
+    <span class="net" title="Connected">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8.1 16.4a5.5 5.5 0 0 1 7.8 0M12 20h.01M4.9 12.9a10 10 0 0 1 14.2 0M1.4 9.4a15 15 0 0 1 21.2 0"/></svg>
+      <span class="sr-only">Connected</span>
+    </span>
+    <span class="clock">
+      <b id="clock-time">--:--</b>
+      <span id="clock-date">--</span>
+    </span>
+    <a class="exit" href="./index.html" aria-label="Log off and return to the site" title="Log off">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    </a>
+  </div>
+</div>
 
-            win.addEventListener('mousedown', () => win.style.zIndex = ++zIndexCounter);
-
-            titleBar.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.clientX; startY = e.clientY;
-                initialX = win.offsetLeft; initialY = win.offsetTop;
-                document.body.style.userSelect = 'none';
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                win.style.left = (initialX + e.clientX - startX) + 'px';
-                win.style.top = (initialY + e.clientY - startY) + 'px';
-            });
-
-            document.addEventListener('mouseup', () => { isDragging = false; document.body.style.userSelect = 'auto'; });
-        });
-
-        // 4. Paint App
-        const canvas = document.getElementById('paintCanvas');
-        const ctx = canvas.getContext('2d');
-        let painting = false;
-
-        setTimeout(() => { canvas.width = canvas.parentElement.clientWidth - 40; }, 500);
-
-        function startPosition(e) { painting = true; draw(e); }
-        function endPosition() { painting = false; ctx.beginPath(); }
-        function draw(e) {
-            if (!painting) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = 5; ctx.lineCap = 'round';
-            ctx.strokeStyle = document.getElementById('paintColor').value;
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-        }
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-        canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition);
-        canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseleave', endPosition);
-
-        // 5. Calculator App
-        let calcVal = "";
-        function calcInput(char) {
-            const display = document.getElementById('calc-display');
-            if(char === 'C') { calcVal = ""; }
-            else if(char === '=') { try { calcVal = eval(calcVal).toString(); } catch(e) { calcVal = "Error"; } }
-            else { calcVal += char; }
-            display.value = calcVal;
-        }
-
-        // 6. Terminal Boot Hack Effect
-        const termOutput = document.getElementById('term-output');
-        const hackLines = [
-            "Loading Kernel drivers...", "Mounting secure volumes...", 
-            "Bypassing firewall...", "Access Granted: Ali Saleh.", 
-            "Initializing GUI modules...", "Ready."
-        ];
-        let termIndex = 0;
-        function runTerm() {
-            if(termIndex < hackLines.length) {
-                termOutput.innerHTML = termOutput.innerHTML.replace('<p class="animate-pulse">_</p>', '');
-                termOutput.innerHTML += `<p>> ${hackLines[termIndex]}</p><p class="animate-pulse">_</p>`;
-                termIndex++;
-                setTimeout(runTerm, 800);
-            }
-        }
-        setTimeout(runTerm, 3000);
-    </script>
+<script src="./assets/js/os.js" defer></script>
 </body>
 </html>
