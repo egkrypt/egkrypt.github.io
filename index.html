@@ -1,218 +1,381 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ali Saleh | Computer Engineer & Game Dev</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@700&display=swap');
-        
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: #020005;
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        #particles-js { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+<title>Ali Saleh — Computer Engineer, Software &amp; Game Developer</title>
+<meta name="description" content="Ali Saleh (EG-KRYPT) builds horror games in Unity, C# software, and KryptOS — an interactive desktop that runs in your browser. Three games published on itch.io and HUSH. in development for Steam.">
+<meta name="author" content="Ali Saleh">
+<link rel="canonical" href="https://kryptdev.me/">
+<meta name="theme-color" content="#050208">
+<meta name="color-scheme" content="dark">
 
-        /* Premium Glassmorphism */
-        .glass-panel {
-            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(168, 85, 247, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
+<!-- Social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="kryptdev.me">
+<meta property="og:url" content="https://kryptdev.me/">
+<meta property="og:title" content="Ali Saleh — Computer Engineer, Software &amp; Game Developer">
+<meta property="og:description" content="Horror games in Unity, C# software, and KryptOS — an interactive desktop that runs in your browser.">
+<meta property="og:image" content="https://kryptdev.me/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ali Saleh — kryptdev.me">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ali Saleh — Computer Engineer, Software &amp; Game Developer">
+<meta name="twitter:description" content="Horror games in Unity, C# software, and KryptOS — an interactive desktop that runs in your browser.">
+<meta name="twitter:image" content="https://kryptdev.me/assets/img/og.png">
 
-        .gradient-text {
-            background: linear-gradient(135deg, #c084fc, #ec4899, #8b5cf6);
-            background-size: 200% 200%;
-            animation: gradientShift 5s ease infinite;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        @keyframes gradientShift { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
+<!-- Icons -->
+<link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png">
+<link rel="manifest" href="./site.webmanifest">
 
-        .font-space { font-family: 'Space Grotesk', sans-serif; }
+<!-- Fonts: preconnect first so the handshake overlaps the CSS download -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Outfit:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
 
-        /* 3D Game Cards */
-        .game-card { perspective: 1000px; }
-        .game-inner { transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .game-content { transform: translateZ(60px); }
-        .game-overlay { background: rgba(0,0,0,0.8); transition: all 0.3s ease; }
-        .group:hover .game-overlay { background: rgba(255,255,255,0.1); backdrop-filter: blur(3px); }
-
-        /* Glowing OS Button */
-        .os-btn-container { position: relative; display: inline-block; }
-        .os-btn-glow {
-            position: absolute; inset: -5px; background: linear-gradient(90deg, #c084fc, #ec4899, #3b82f6);
-            border-radius: 50px; filter: blur(15px); opacity: 0.7; animation: pulseGlow 2s linear infinite;
-        }
-        @keyframes pulseGlow { 0%, 100% { opacity: 0.5; filter: blur(15px); } 50% { opacity: 1; filter: blur(25px); } }
-
-        /* Transition Overlay */
-        #transition-overlay {
-            position: fixed; inset: 0; background: #000; z-index: 99999;
-            display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .active-transition { opacity: 1 !important; display: flex !important; }
-        .warp-speed { animation: warpOut 1s forwards cubic-bezier(0.5, 0, 0.1, 1); }
-        @keyframes warpOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(100); opacity: 0; } }
-    </style>
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/site.css">
+<link rel="prefetch" href="./os.html" as="document">
 </head>
-<body class="selection:bg-purple-500 selection:text-white antialiased">
 
-    <!-- Screen Wipe Transition -->
-    <div id="transition-overlay">
-        <div id="warp-core" class="w-10 h-10 bg-white rounded-full shadow-[0_0_100px_#fff]"></div>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="starfield" aria-hidden="true"></div>
+
+<div id="warp" aria-hidden="true"><div class="core"></div></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true">K</span>
+      EG-KRYPT
+    </a>
+
+    <button class="nav__toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+
+    <ul class="nav__links" id="nav-links">
+      <li><a href="#kryptos">KryptOS</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#credentials">Credentials</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================ HERO ============================ -->
+  <section class="wrap hero" id="top">
+    <div class="hero__avatar">
+      <img src="https://github.com/egkrypt.png" width="150" height="150"
+           alt="Ali Saleh" fetchpriority="high"
+           onerror="this.onerror=null;this.src='./assets/img/icon-512.png'">
     </div>
 
-    <div id="particles-js"></div>
+    <h1>Ali Saleh</h1>
 
-    <nav class="fixed w-full glass-panel z-50 border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <a href="#" class="text-2xl font-space font-bold tracking-tighter text-white">EG-KRYPT<span class="text-purple-500">.</span></a>
-                <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-300">
-                    <a href="#os-entry" class="hover:text-purple-400 transition">KryptOS</a>
-                    <a href="#games" class="hover:text-purple-400 transition">Games</a>
-                    <a href="#contact" class="hover:text-purple-400 transition">Contact</a>
-                </div>
-            </div>
+    <p class="hero__lede">
+      Computer engineer building <strong>horror games in Unity</strong>,
+      C# software, and <strong>KryptOS</strong> — a desktop environment that
+      runs in your browser.
+    </p>
+
+    <!-- Update the age here once a year, or replace with a birth year. -->
+    <p class="mono" style="margin-top:1rem;color:var(--dim)">18 years old, Lebanese-Kuwaiti, living in Kuwait</p>
+
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#kryptos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12z"/></svg>
+        Launch KryptOS
+      </a>
+      <a class="btn btn--discord" href="https://discord.gg/ExMbGbcszn" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 7h10a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4h-1.2l-.8 2-2-2H7a4 4 0 0 1-4-4v-3a4 4 0 0 1 4-4Zm2.2 5.2a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Zm5.6 0a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z"/></svg>
+        Eagles Discord
+      </a>
+      <a class="btn btn--instagram" href="https://www.instagram.com/egls.27/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
+      <a class="btn btn--youtube" href="https://www.youtube.com/@EG-Krypt" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M11 9.5v5l4-2.5z" fill="currentColor" stroke="none"/></svg>
+        YouTube
+      </a>
+      <a class="btn btn--github" href="https://github.com/egkrypt" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l-4-6 4-6M15 6l4 6-4 6"/></svg>
+        GitHub
+      </a>
+    </div>
+
+    <dl class="facts">
+      <div>
+        <dt>Games built</dt>
+        <dd>30+ <small>Unity and .NET</small></dd>
+      </div>
+      <div>
+        <dt>With C#</dt>
+        <dd>6 yrs <small>since late 2019</small></dd>
+      </div>
+      <div>
+        <dt>Published</dt>
+        <dd>3 <small>live on itch.io</small></dd>
+      </div>
+      <div>
+        <dt>Kuwait Science Award</dt>
+        <dd>1st <small>national placement</small></dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ============================ KRYPTOS ============================ -->
+  <section class="wrap section section--tight" id="kryptos">
+    <div class="portal">
+      <h2>Access the <span class="gradient-text">mainframe</span></h2>
+      <p>
+        KryptOS is a desktop environment I built from scratch — draggable windows,
+        a working terminal, a paint app and a calculator. My certificates, skills
+        and projects are filed inside it.
+      </p>
+
+      <div class="launch">
+        <span class="launch__glow" aria-hidden="true"></span>
+        <a class="launch__btn" href="./os.html" id="launch">
+          <span aria-hidden="true">⌘</span> Boot KryptOS
+        </a>
+      </div>
+
+      <p class="portal__grid">
+        <span>terminal</span><span>file explorer</span><span>paint</span>
+        <span>calculator</span><span>gallery</span><span>11 certificates</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ GAMES ============================ -->
+  <section class="wrap section" id="games">
+    <div class="section-head">
+      <hr>
+      <p class="count">03 shipped / 01 in development</p>
+      <h2>Games</h2>
+      <p>Short-form horror built in Unity and published on itch.io. Free to play in the browser or download.</p>
+    </div>
+
+    <div class="grid-games">
+
+      <a class="game" href="https://alawyds.itch.io/the-asylum" target="_blank" rel="noopener noreferrer">
+        <div class="game__media">
+          <picture>
+            <source srcset="./assets/img/asylum.webp" type="image/webp">
+            <img src="./assets/img/asylum.png" width="315" height="250" loading="lazy" decoding="async"
+                 alt="Dim corridor from The Asylum">
+          </picture>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="pt-40 pb-20 px-4 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
-        <div class="mb-8" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.3">
-            <div class="w-48 h-48 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 p-1 shadow-[0_0_50px_rgba(168,85,247,0.4)]">
-                <img src="https://github.com/egkrypt.png" alt="Ali Saleh" class="w-full h-full object-cover rounded-full border-4 border-[#020005]">
-            </div>
+        <div class="game__body">
+          <p class="game__tag tag-red">Puzzle horror</p>
+          <h3>The Asylum</h3>
+          <p class="game__meta">Play on itch.io</p>
         </div>
-        
-        <h1 class="text-6xl md:text-8xl font-space font-extrabold tracking-tight mb-6 text-white drop-shadow-2xl">
-            Hi, I'm <span class="gradient-text">Ali Saleh</span>
-        </h1>
-        <h2 class="text-xl md:text-3xl text-gray-400 font-light mb-10 max-w-4xl leading-relaxed">
-            18-year-old Lebanese/Kuwaiti <strong class="text-white font-semibold">Computer Engineer, Software & Game Dev</strong>.
-        </h2>
-        
-        <div class="flex flex-wrap justify-center gap-4 mb-12">
-            <a href="https://discord.gg/ExMbGbcszn" target="_blank" class="px-8 py-3 glass-panel hover:bg-indigo-600/30 transition rounded-full text-sm text-indigo-300 font-bold tracking-wider flex items-center gap-2 border border-indigo-500/50">
-                🎮 EAGLES DISCORD
-            </a>
-            <a href="https://www.instagram.com/egls.27/" target="_blank" class="px-8 py-3 glass-panel hover:bg-pink-600/30 transition rounded-full text-sm text-pink-300 font-bold tracking-wider flex items-center gap-2 border border-pink-500/50">
-                📸 INSTAGRAM
-            </a>
-            <a href="https://www.youtube.com/@EG-Krypt" target="_blank" class="px-8 py-3 glass-panel hover:bg-red-600/30 transition rounded-full text-sm text-red-300 font-bold tracking-wider flex items-center gap-2 border border-red-500/50">
-                ▶️ YOUTUBE
-            </a>
+      </a>
+
+      <a class="game" href="https://alawyds.itch.io/chasers" target="_blank" rel="noopener noreferrer">
+        <div class="game__media">
+          <picture>
+            <source srcset="./assets/img/chasers.webp" type="image/webp">
+            <img src="./assets/img/chasers.png" width="315" height="250" loading="lazy" decoding="async"
+                 alt="Chase scene from Chasers">
+          </picture>
         </div>
-    </section>
-
-    <!-- The OS Portal -->
-    <section id="os-entry" class="py-20 relative z-10">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="glass-panel rounded-[3rem] p-10 md:p-16 border border-purple-500/30 text-center relative overflow-hidden bg-black/40">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
-                
-                <h2 class="text-4xl md:text-6xl font-space font-bold mb-6 text-white">ACCESS <span class="text-purple-500">MAINFRAME</span></h2>
-                <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">Enter my interactive KryptOS to view all my <strong class="text-yellow-400">#1 Science Awards</strong>, detailed Skills, Degrees, and Fun Apps.</p>
-                
-                <!-- The Launch OS Button -->
-                <div class="os-btn-container cursor-pointer" onclick="bootOS(event)">
-                    <div class="os-btn-glow"></div>
-                    <button class="relative px-12 py-5 bg-[#020005] border border-purple-500 rounded-full font-space font-bold text-2xl text-white uppercase tracking-[0.2em] hover:scale-105 transition-transform duration-300 flex items-center gap-4 z-10">
-                        <span class="text-purple-500">⚡</span> LAUNCH KRYPT_OS
-                    </button>
-                </div>
-            </div>
+        <div class="game__body">
+          <p class="game__tag tag-pink">Meme horror</p>
+          <h3>Chasers</h3>
+          <p class="game__meta">Play on itch.io</p>
         </div>
-    </section>
+      </a>
 
-    <!-- Published Games -->
-    <section id="games" class="py-24 relative z-10 bg-black/80 border-y border-white/5">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-5xl md:text-7xl font-space font-bold mb-4 text-center text-white">PUBLISHED <span class="gradient-text">GAMES</span></h2>
-            <p class="text-center text-xl text-gray-400 mb-16">Developing <strong class="text-pink-500">HUSH.</strong> for Steam!</p>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Asylum -->
-                <a href="https://alawyds.itch.io/the-asylum" target="_blank" class="game-card block group" data-tilt data-tilt-max="10" data-tilt-speed="400">
-                    <div class="game-inner relative rounded-2xl h-[400px] overflow-hidden border border-white/10 shadow-2xl">
-                        <img src="./assets/asylum.jpg" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition duration-700" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=The+Asylum'">
-                        <div class="absolute inset-0 game-overlay flex flex-col justify-end p-8">
-                            <div class="game-content">
-                                <p class="text-red-400 font-bold tracking-widest text-sm mb-2 uppercase">Puzzle Horror</p>
-                                <h3 class="text-4xl font-space font-bold text-white drop-shadow-lg">The Asylum</h3>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Chasers -->
-                <a href="https://alawyds.itch.io/chasers" target="_blank" class="game-card block group" data-tilt data-tilt-max="10" data-tilt-speed="400">
-                    <div class="game-inner relative rounded-2xl h-[400px] overflow-hidden border border-white/10 shadow-2xl">
-                        <img src="./assets/chasers.jpg" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition duration-700" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=Chasers'">
-                        <div class="absolute inset-0 game-overlay flex flex-col justify-end p-8">
-                            <div class="game-content">
-                                <p class="text-pink-400 font-bold tracking-widest text-sm mb-2 uppercase">Meme Horror</p>
-                                <h3 class="text-4xl font-space font-bold text-white drop-shadow-lg">Chasers</h3>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Backrooms -->
-                <a href="https://alawyds.itch.io/backrooms" target="_blank" class="game-card block group" data-tilt data-tilt-max="10" data-tilt-speed="400">
-                    <div class="game-inner relative rounded-2xl h-[400px] overflow-hidden border border-white/10 shadow-2xl">
-                        <img src="./assets/backrooms.jpg" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition duration-700" onerror="this.src='https://via.placeholder.com/315x250/111/444?text=Backrooms'">
-                        <div class="absolute inset-0 game-overlay flex flex-col justify-end p-8">
-                            <div class="game-content">
-                                <p class="text-green-400 font-bold tracking-widest text-sm mb-2 uppercase">Survival Horror</p>
-                                <h3 class="text-4xl font-space font-bold text-white drop-shadow-lg">Backrooms</h3>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+      <a class="game" href="https://alawyds.itch.io/backrooms" target="_blank" rel="noopener noreferrer">
+        <div class="game__media">
+          <picture>
+            <source srcset="./assets/img/backrooms.webp" type="image/webp">
+            <img src="./assets/img/backrooms.png" width="315" height="250" loading="lazy" decoding="async"
+                 alt="Yellow corridor from Backrooms">
+          </picture>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <footer id="contact" class="pt-24 pb-12 relative z-10">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="text-5xl font-space font-bold mb-10 text-white">LET'S <span class="gradient-text">CONNECT</span></h2>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-16">
-                <div class="glass-panel px-10 py-6 rounded-2xl border border-indigo-500/30 w-full md:w-auto hover:-translate-y-2 transition duration-300">
-                    <p class="text-gray-400 text-sm mb-2 uppercase tracking-widest">Discord</p>
-                    <p class="text-3xl font-bold text-indigo-400">G9ES</p>
-                </div>
-                <div class="glass-panel px-10 py-6 rounded-2xl border border-pink-500/30 w-full md:w-auto hover:-translate-y-2 transition duration-300">
-                    <p class="text-gray-400 text-sm mb-2 uppercase tracking-widest">Email</p>
-                    <a href="mailto:dsremixes5@gmail.com" class="text-2xl font-bold text-pink-400 hover:text-white transition">dsremixes5@gmail.com</a>
-                </div>
-            </div>
-            <p class="text-gray-600 text-sm font-space tracking-widest">&copy; 2026 ALI SALEH. AASU CLASS OF '30.</p>
+        <div class="game__body">
+          <p class="game__tag tag-green">Survival horror</p>
+          <h3>Backrooms</h3>
+          <p class="game__meta">Play on itch.io</p>
         </div>
-    </footer>
+      </a>
 
-    <script>
-        particlesJS('particles-js', {
-            "particles": { "number": { "value": 60 }, "color": { "value": "#a855f7" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3 }, "size": { "value": 2 }, "line_linked": { "enable": true, "color": "#c084fc", "opacity": 0.1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" } } }
-        });
+      <article class="game game--wip">
+        <p class="badge">In development</p>
+        <h3>HUSH.</h3>
+        <p>My first commercial title, being built for Steam release.</p>
+      </article>
 
-        function bootOS(e) {
-            e.preventDefault();
-            const overlay = document.getElementById('transition-overlay');
-            const core = document.getElementById('warp-core');
-            overlay.classList.add('active-transition');
-            setTimeout(() => { core.classList.add('warp-speed'); }, 50);
-            setTimeout(() => { window.location.href = 'os.html'; }, 900); // Links directly to os.html
-        }
-    </script>
+    </div>
+  </section>
+
+  <!-- ============================ WORK ============================ -->
+  <section class="wrap section" id="work">
+    <div class="section-head">
+      <hr>
+      <h2>Other work</h2>
+      <p>Software outside of games — the projects that came out of school engineering work and audio tooling.</p>
+    </div>
+
+    <div class="grid-work">
+
+      <article class="work">
+        <div class="work__media">
+          <picture>
+            <source srcset="./assets/img/xray-prototype.webp" type="image/webp">
+            <img src="./assets/img/xray-prototype.png" width="799" height="475" loading="lazy" decoding="async"
+                 alt="Screenshot of the X-Ray AI prototype interface">
+          </picture>
+        </div>
+        <div class="work__body">
+          <h3>X-Ray AI prototype</h3>
+          <p>An assistive tool that reads X-ray images and flags findings for review. Built as a research prototype.</p>
+          <ul class="work__stack">
+            <li>Python</li><li>Machine learning</li><li>Medical imaging</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="work">
+        <div class="work__media">
+          <picture>
+            <source srcset="./assets/img/elevate-studio.webp" type="image/webp">
+            <img src="./assets/img/elevate-studio.jpg" width="1277" height="760" loading="lazy" decoding="async"
+                 alt="Screenshot of the Elevate Voice Studio interface">
+          </picture>
+        </div>
+        <div class="work__body">
+          <h3>Elevate Voice Studio</h3>
+          <p>A voice and audio production workspace for recording, cleaning up and mixing spoken audio.</p>
+          <ul class="work__stack">
+            <li>C#</li><li>.NET</li><li>Audio DSP</li><li>UI design</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============================ CREDENTIALS ============================ -->
+  <section class="wrap section" id="credentials">
+    <div class="section-head">
+      <hr>
+      <h2>Credentials</h2>
+      <p>Certificates open as PDFs. Everything here is also filed in the KryptOS file explorer.</p>
+    </div>
+
+    <ul class="creds">
+      <li><a href="./Degrees/Kuwait_Science_Award.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">🥇</span> Kuwait Science Award <span class="issuer">1st place</span></a></li>
+      <li><a href="./Degrees/HP_Cybersecurity.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">🛡️</span> Cybersecurity <span class="issuer">HP LIFE</span></a></li>
+      <li><a href="./Degrees/HP_Presentations.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">📊</span> Presentation skills <span class="issuer">HP LIFE</span></a></li>
+      <li><a href="./Degrees/HP_Emails.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">✉️</span> Effective email <span class="issuer">HP LIFE</span></a></li>
+      <li><a href="./Degrees/Coursera_WP.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">🌐</span> WordPress <span class="issuer">Coursera</span></a></li>
+      <li><a href="./Degrees/Coursera_Excel.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">📗</span> Excel <span class="issuer">Coursera</span></a></li>
+      <li><a href="./Degrees/Coursera_Word.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">📘</span> Word <span class="issuer">Coursera</span></a></li>
+      <li><a href="./Degrees/Coursera_Trello.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">📋</span> Trello <span class="issuer">Coursera</span></a></li>
+      <li><a href="./Degrees/Coursera_Canva.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">📝</span> Canva <span class="issuer">Coursera</span></a></li>
+      <li><a href="./Degrees/Typing_Certs.pdf" target="_blank" rel="noopener">
+        <span class="ico" aria-hidden="true">⌨️</span> Typing (4 certificates) <span class="issuer">PDF</span></a></li>
+      <li><span><span class="ico" aria-hidden="true">🎓</span> AASU degree <span class="issuer">class of 2030</span></span></li>
+    </ul>
+  </section>
+
+  <!-- ============================ CONTACT ============================ -->
+  <section class="wrap section" id="contact">
+    <div class="section-head">
+      <hr>
+      <h2>Get in touch</h2>
+      <p>Open to game jams, collaborations and freelance work.</p>
+    </div>
+
+    <dl class="contact-grid">
+      <div class="contact-card">
+        <dt>Email</dt>
+        <dd>
+          <a href="mailto:dsremixes5@gmail.com">dsremixes5@gmail.com</a>
+          <button class="copy" type="button" data-copy="dsremixes5@gmail.com" aria-label="Copy email address">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M15 5H5a2 2 0 0 0-2 2v10"/></svg>
+          </button>
+        </dd>
+      </div>
+
+      <div class="contact-card">
+        <dt>Discord</dt>
+        <dd>
+          G9ES
+          <button class="copy" type="button" data-copy="G9ES" aria-label="Copy Discord username">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M15 5H5a2 2 0 0 0-2 2v10"/></svg>
+          </button>
+        </dd>
+      </div>
+
+      <div class="contact-card">
+        <dt>Community</dt>
+        <dd><a href="https://discord.gg/ExMbGbcszn" target="_blank" rel="noopener noreferrer">Eagles Discord server</a></dd>
+      </div>
+    </dl>
+
+    <p class="sr-only" role="status" id="copy-status"></p>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <p>© <span id="year">2026</span> Ali Saleh — AASU class of 2030</p>
+    <p><a href="./os.html">KryptOS</a> · <a href="https://github.com/egkrypt/egkrypt.github.io" target="_blank" rel="noopener noreferrer">Source</a></p>
+  </div>
+</footer>
+
+<script src="./assets/js/site.js" defer></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ali Saleh",
+  "alternateName": "EG-KRYPT",
+  "url": "https://kryptdev.me/",
+  "image": "https://kryptdev.me/assets/img/og.png",
+  "jobTitle": "Computer Engineer, Software and Game Developer",
+  "nationality": ["Lebanese", "Kuwaiti"],
+  "address": { "@type": "PostalAddress", "addressCountry": "KW" },
+  "email": "mailto:dsremixes5@gmail.com",
+  "knowsAbout": ["C#", ".NET", "Unity", "Game development", "C++", "Python", "UI/UX design", "Video editing", "Linux server administration"],
+  "award": "1st place, Kuwait Science Award",
+  "sameAs": [
+    "https://github.com/egkrypt",
+    "https://www.youtube.com/@EG-Krypt",
+    "https://www.instagram.com/egls.27/",
+    "https://alawyds.itch.io/"
+  ]
+}
+</script>
+
 </body>
 </html>
